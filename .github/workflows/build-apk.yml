@@ -18,11 +18,11 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    - name: Change Gradle Script Permission
-      run: chmod +x gradlew
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
 
-    - name: Build APK dengan Gradle
-      run: ./gradlew assembleDebug
+    - name: Build APK Tanpa Gradlew Bawaan
+      run: gradle assembleDebug --no-daemon
 
     - name: Upload APK Hasil Build
       uses: actions/upload-artifact@v4
