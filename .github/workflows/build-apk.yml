@@ -21,11 +21,41 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Bypass Google Services Configuration
+    - name: Inject Valid Mock Google Services Configuration
       run: |
         mkdir -p app/src/debug
-        echo '{}' > app/google-services.json
-        echo '{}' > app/src/debug/google-services.json
+        cat << 'EOF' > app/google-services.json
+        {
+          "project_info": {
+            "project_number": "1234567890",
+            "project_id": "mock-project-id",
+            "storage_bucket": "mock-project-id.appspot.com"
+          },
+          "client": [
+            {
+              "client_info": {
+                "mobilesdk_app_id": "1:1234567890:android:mockappid",
+                "android_client_info": {
+                  "package_name": "com.capcut.suite"
+                }
+              },
+              "oauth_client": [],
+              "api_key": [
+                {
+                  "current_key": "mock_api_key_placeholder"
+                }
+              ],
+              "services": {
+                "appinvite_service": {
+                  "other_platform_oauth_client": []
+                }
+              }
+            }
+          ],
+          "configuration_version": "1"
+        }
+        EOF
+        cp app/google-services.json app/src/debug/google-services.json
 
     - name: Generate Dummy Debug Keystore
       run: |
